@@ -19,9 +19,6 @@ on:
       - 'compose.extras.yaml'
       - '.env'
       - '.github/workflows/run-telemetry-tests.yml'
-  # Post-merge validation on main.
-  push:
-    branches: [main]
     paths:
       - 'src/**'
       - 'test/telemetry/**'

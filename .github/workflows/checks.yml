@@ -5,8 +5,6 @@ name: Checks
 on:
   merge_group:
     types: [checks_requested]
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
