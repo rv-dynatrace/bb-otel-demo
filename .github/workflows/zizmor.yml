@@ -7,8 +7,6 @@ on:
   push:
     branches: [main]
   pull_request:
-  schedule:
-    - cron: '39 11 * * 6'  # weekly at 11:39 UTC on Saturday
   workflow_dispatch:
 
 permissions: {}
