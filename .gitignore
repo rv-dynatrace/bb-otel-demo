@@ -20,6 +20,10 @@
 .cursor/
 .cursorrules
 
+# Bluebox
+.bluebox/
+.env.otel
+
 # Build artifacts
 bin/
 obj/
@@ -52,6 +56,7 @@ composer.lock
 
 # Otel Demo specific
 docker-compose.override.yml
+.env.override
 
 src/frontend/cypress/videos
 src/frontend/cypress/screenshots

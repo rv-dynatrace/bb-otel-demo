@@ -15,19 +15,36 @@
 #   traces:  otlp_grpc/jaeger, debug, span_metrics
 #   metrics: otlp_http/prometheus, debug
 #   logs:    opensearch, debug
-#
-# Example:
-#
-# exporters:
-#   otlp_grpc/mybackend:
-#     endpoint: https://ingest.mybackend.com
-#
-# service:
-#   pipelines:
-#     traces:
-#       exporters: [otlp_grpc/jaeger, debug, span_metrics, otlp_grpc/mybackend]  # repeat upstream exporters
-#     metrics:
-#       receivers: [docker_stats, http_check/frontend-proxy, host_metrics, nginx, otlp, redis, span_metrics]
-#       exporters: [otlp_http/prometheus, debug, otlp_grpc/mybackend]           # repeat upstream exporters
-#     logs:
-#       exporters: [opensearch, debug, otlp_grpc/mybackend]                     # repeat upstream exporters
+
+processors:
+  resource/vcs:
+    attributes:
+      - key: vcs.repository.url.full
+        value: "${env:VCS_REPO_URL}"
+        action: upsert
+      - key: vcs.ref.head.revision
+        value: "${env:VCS_REPO_REVISION}"
+        action: upsert
+      - key: deployment.environment.name
+        value: "docker-compose"
+        action: upsert
+  cumulativetodelta:
+
+exporters:
+  otlphttp/dynatrace:
+    endpoint: https://vyl50352.sprint.dynatracelabs.com/api/v2/otlp
+    headers:
+      Authorization: "Api-Token ${env:DT_INGEST_TOKEN}"
+
+service:
+  pipelines:
+    traces:
+      processors: [resource/vcs]
+      exporters: [debug, otlphttp/dynatrace]
+    metrics:
+      receivers: [docker_stats, http_check/frontend-proxy, host_metrics, nginx, otlp, redis]
+      processors: [resource/vcs, cumulativetodelta]
+      exporters: [debug, otlphttp/dynatrace]
+    logs:
+      processors: [resource/vcs]
+      exporters: [debug, otlphttp/dynatrace]
