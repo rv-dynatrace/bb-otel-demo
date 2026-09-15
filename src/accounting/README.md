@@ -1,6 +1,6 @@
 # Accounting Service
 
-This service consumes new orders from a Kafka topic.
+This service consumes new orders from a Kafka topic. !
 
 ## Local Build
 
